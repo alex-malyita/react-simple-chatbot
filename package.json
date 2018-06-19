@@ -72,13 +72,17 @@
     "sinon": "^2.3.5",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.2.0",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^2.5.1",
+    "styled-components": "^2.x",
+    "react": "^16.x",
+    "react-dom": "^16.x"
   },
   "dependencies": {
     "circular-json": "^0.3.1",
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
-    "random-id": "0.0.2"
+    "random-id": "0.0.2",
+    "react-dropzone": "^4.2.11"
   },
   "peerDependencies": {
     "styled-components": "^2.x",
