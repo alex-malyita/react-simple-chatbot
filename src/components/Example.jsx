@@ -18,14 +18,26 @@ const steps = [
   {
     id: '1',
     message: 'Hello World',
+    trigger: '2'
+  },{
+    id: '2',
+    user: true,
+    trigger: '3'
+  },{
+    id: '3',
+    message: 'By',
     end: true,
-  },
+  }
 ];
 
 
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
-    <ChatBot steps={steps} />
+    <ChatBot
+      enterNewLineKeyCode={13}
+      holdNewLineKey="ctrlKey"
+      steps={steps}
+    />
   </ThemeProvider>
 );
 
