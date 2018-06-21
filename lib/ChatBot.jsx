@@ -247,6 +247,20 @@ class ChatBot extends Component {
         renderedSteps.pop();
       }
 
+      if (currentStep.addOptions && currentStep.user) {
+        const option = currentStep.addOptions.find(o => o.value === data.value);
+        // replace choose option for user message
+        currentStep = Object.assign({}, currentStep, option, defaultUserSettings, {
+          message: option.label,
+          addOptions: undefined,
+        });
+
+        renderedSteps.pop();
+        previousSteps.pop();
+        renderedSteps.push(currentStep);
+        previousSteps.push(currentStep);
+      }
+
       const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
       let nextStep = Object.assign({}, steps[trigger]);
 
@@ -272,6 +286,10 @@ class ChatBot extends Component {
 
       this.setState({ renderedSteps, currentStep, previousStep }, () => {
         if (nextStep.user) {
+          if (nextStep.addOptions) {
+            renderedSteps.push(nextStep);
+            previousSteps.push(nextStep);
+          }
           this.setState({ disabled: false }, () => {
             if (enableMobileAutoFocus || !isMobile()) {
               this.input.focus();
@@ -392,6 +410,11 @@ class ChatBot extends Component {
 
       currentStep = Object.assign({}, defaultUserSettings, currentStep, step);
 
+      if (currentStep.addOptions) {
+        delete currentStep.addOptions;
+        renderedSteps.pop();
+        previousSteps.pop();
+      }
       renderedSteps.push(currentStep);
       previousSteps.push(currentStep);
 
@@ -456,7 +479,7 @@ class ChatBot extends Component {
       hideBotAvatar,
       hideUserAvatar,
     } = this.props;
-    const { options, component, asMessage } = step;
+    const { options, addOptions, component, asMessage } = step;
     const steps = this.generateRenderedStepsById();
     const previousStep = index > 0 ? renderedSteps[index - 1] : {};
 
@@ -473,7 +496,7 @@ class ChatBot extends Component {
       );
     }
 
-    if (options) {
+    if (options || addOptions) {
       return (
         <OptionsStep
           key={index}
