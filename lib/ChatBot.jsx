@@ -72,6 +72,7 @@ class ChatBot extends Component {
     this.onDragEnter = this.onDragEnter.bind(this);
     this.onDragLeave = this.onDragLeave.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
+    this.setFocusOnInput = this.setFocusOnInput.bind(this);
   }
 
   componentWillMount() {
@@ -81,7 +82,6 @@ class ChatBot extends Component {
       cache,
       cacheName,
       customDelay,
-      enableMobileAutoFocus,
       userAvatar,
       userDelay,
     } = this.props;
@@ -128,11 +128,7 @@ class ChatBot extends Component {
       steps,
     }, () => {
       // focus input if last step cached is a user step
-      this.setState({ disabled: false }, () => {
-        if (enableMobileAutoFocus || !isMobile()) {
-          this.input.focus();
-        }
-      });
+      this.setState({ disabled: false }, this.setFocusOnInput);
     });
 
     this.setState({
@@ -235,6 +231,13 @@ class ChatBot extends Component {
     });
   }
 
+  setFocusOnInput() {
+    const { enableMobileAutoFocus } = this.props;
+    if ((enableMobileAutoFocus || !isMobile()) && this.input) {
+      this.input.focus();
+    }
+  }
+
   getTriggeredStep(trigger, value) {
     const steps = this.generateRenderedStepsById();
     return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
@@ -290,7 +293,6 @@ class ChatBot extends Component {
   }
 
   triggerNextStep(data) {
-    const { enableMobileAutoFocus } = this.props;
     const {
       defaultUserSettings,
       previousSteps,
@@ -313,6 +315,28 @@ class ChatBot extends Component {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
       const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
       delete currentStep.options;
+
+      // replace choose option for user message
+      currentStep = Object.assign({}, currentStep, option, defaultUserSettings, {
+        user: true,
+        message: option.label,
+        trigger,
+      });
+
+      renderedSteps.pop();
+      previousSteps.pop();
+      renderedSteps.push(currentStep);
+      previousSteps.push(currentStep);
+
+      this.setState({
+        currentStep,
+        renderedSteps,
+        previousSteps,
+      });
+    } else if (currentStep.addOptions && data) {
+      const option = currentStep.addOptions.filter(o => o.value === data.value)[0];
+      const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
+      delete currentStep.addOptions;
 
       // replace choose option for user message
       currentStep = Object.assign({}, currentStep, option, defaultUserSettings, {
@@ -379,11 +403,7 @@ class ChatBot extends Component {
             renderedSteps.push(nextStep);
             previousSteps.push(nextStep);
           }
-          this.setState({ disabled: false }, () => {
-            if (enableMobileAutoFocus || !isMobile()) {
-              this.input.focus();
-            }
-          });
+          this.setState({ disabled: false }, this.setFocusOnInput);
         } else {
           renderedSteps.push(nextStep);
           previousSteps.push(nextStep);
@@ -426,6 +446,10 @@ class ChatBot extends Component {
         value: step.value,
         files: step.files,
       }));
+
+      this.setState({
+        disabled: true,
+      });
 
       this.props.handleEnd({ renderedSteps, steps, values });
     }
@@ -537,7 +561,6 @@ class ChatBot extends Component {
   }
 
   checkInvalidInput() {
-    const { enableMobileAutoFocus } = this.props;
     const { currentStep, inputValue } = this.state;
     const result = currentStep.validator(inputValue);
     const value = inputValue;
@@ -553,11 +576,7 @@ class ChatBot extends Component {
             inputValue: value,
             inputInvalid: false,
             disabled: false,
-          }, () => {
-            if (enableMobileAutoFocus || !isMobile()) {
-              this.input.focus();
-            }
-          });
+          }, this.setFocusOnInput);
         }, 2000);
       });
 
