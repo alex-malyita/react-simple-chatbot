@@ -623,10 +623,12 @@ class ChatBot extends Component {
     const { enableFiles = false } = currentStep;
     const {
       className,
+      contentHeight,
       contentStyle,
       floating,
       footerStyle,
       headerComponent,
+      hideFooter,
       headerTitle,
       hideHeader,
       hideSubmitButton,
@@ -686,41 +688,44 @@ class ChatBot extends Component {
             {!hideHeader && header}
             <Content
               className="rsc-content"
+              contentHeight={contentHeight}
               innerRef={contentRef => (this.content = contentRef)}
               floating={floating}
               style={contentStyle}
             >
               {_.map(renderedSteps, this.renderStep)}
             </Content>
-            <Footer className="rsc-footer" style={footerStyle}>
-              <Textarea
-                rows={1}
-                style={inputStyle}
-                innerRef={inputRef => (this.input = inputRef)}
-                className="rsc-input"
-                placeholder={inputInvalid ? '' : inputPlaceholder}
-                onKeyPress={this.handleKeyPress}
-                onChange={this.onValueChange}
-                value={inputValue}
-                onPaste={this.onPaste}
-                floating={floating}
-                invalid={inputInvalid}
-                disabled={disabled}
-                hasButton={!hideSubmitButton}
-              />
-              {!hideSubmitButton && (
-                <SubmitButton
-                  className="rsc-submit-button"
-                  style={submitButtonStyle}
-                  onClick={this.handleSubmitButton}
+            {!hideFooter && (
+              <Footer className="rsc-footer" style={footerStyle}>
+                <Textarea
+                  rows={1}
+                  style={inputStyle}
+                  innerRef={inputRef => (this.input = inputRef)}
+                  className="rsc-input"
+                  placeholder={inputInvalid ? '' : inputPlaceholder}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={this.onValueChange}
+                  value={inputValue}
+                  onPaste={this.onPaste}
+                  floating={floating}
                   invalid={inputInvalid}
                   disabled={disabled}
-                  speaking={speaking}
-                >
-                  {icon}
-                </SubmitButton>
-              )}
-            </Footer>
+                  hasButton={!hideSubmitButton}
+                />
+                {!hideSubmitButton && (
+                  <SubmitButton
+                    className="rsc-submit-button"
+                    style={submitButtonStyle}
+                    onClick={this.handleSubmitButton}
+                    invalid={inputInvalid}
+                    disabled={disabled}
+                    speaking={speaking}
+                  >
+                    {icon}
+                  </SubmitButton>
+                )}
+              </Footer>
+            )}
           </ChatBotContainer>
         </div>
       </Dropzone>
@@ -730,6 +735,7 @@ class ChatBot extends Component {
 
 ChatBot.propTypes = {
   avatarStyle: PropTypes.object,
+  contentHeight: PropTypes.string,
   botAvatar: PropTypes.string,
   botDelay: PropTypes.number,
   bubbleOptionStyle: PropTypes.object,
@@ -748,6 +754,7 @@ ChatBot.propTypes = {
   headerTitle: PropTypes.string,
   hideBotAvatar: PropTypes.bool,
   hideHeader: PropTypes.bool,
+  hideFooter: PropTypes.bool,
   hideSubmitButton: PropTypes.bool,
   hideUserAvatar: PropTypes.bool,
   inputStyle: PropTypes.object,
@@ -770,6 +777,7 @@ ChatBot.propTypes = {
 
 ChatBot.defaultProps = {
   avatarStyle: {},
+  contentHeight: '400px',
   botDelay: 1000,
   bubbleOptionStyle: {},
   bubbleStyle: {},
@@ -786,6 +794,7 @@ ChatBot.defaultProps = {
   headerComponent: undefined,
   headerTitle: 'Chat',
   hideBotAvatar: false,
+  hideFooter: false,
   hideHeader: false,
   hideSubmitButton: false,
   hideUserAvatar: false,
