@@ -8,6 +8,8 @@ import Loading from '../common/Loading';
 import AttachmentPreview from './AttachmentPreview';
 import TextStepContainer from './TextStepContainer';
 
+const previewMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+
 class TextStep extends Component {
   /* istanbul ignore next */
   constructor(props) {
@@ -110,11 +112,15 @@ class TextStep extends Component {
           {!loading && (
             files && files.length ? (
               files.map(el => (
-                <AttachmentPreview
-                  src={el}
-                  key={Random(24)}
-                />
-              ))
+                previewMimeTypes.find(t => t === el.type) ? (
+                  <AttachmentPreview
+                    src={el.src}
+                    key={Random(24)}
+                  />
+                ) : (
+                  el.name
+                )
+            ))
             ) : (
               this.renderMessage()
             )

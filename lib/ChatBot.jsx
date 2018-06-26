@@ -254,7 +254,11 @@ class ChatBot extends Component {
 // eslint-disable-next-line no-undef
       const reader = new FileReader();
       reader.onload = (e) => {
-        result.push(e.target.result);
+        result.push({
+          name: blob.name,
+          type: blob.type,
+          src: e.target.result,
+        });
         if (result.length === files.length) {
           this.setState({
             inputValue: files.map(el => el.name).join(', '),
