@@ -22,24 +22,28 @@ const acceptedFileTypes = [
 const steps = [
   {
     id: '1',
-    message: 'Hello, What\'s your name?',
-    trigger: '2',
+    message: 'Test',
+    trigger: '2'
   },
   {
     id: '2',
-    trigger: '3',
+    user: true,
     enableFiles: true,
-    validator: (value) => {
-      if (isNaN(value)) {
-        return 'value should be a number';
-      }
-      return true;
-    },
-    user: true
+    addOptions: [
+      { value: '1', label: 'Number 1',trigger:'3'},
+      { value: '2', label: 'Number 2',trigger:'4'},
+      { value: '3', label: 'Number 3',trigger:'3'},
+    ],
+    trigger: '3'
   },
   {
     id: '3',
-    message: 'Nice to meet you, by',
+    message: 'Ok',
+    trigger: '1'
+  },
+  {
+    id: '4',
+    message: 'Awesome',
     end: true
   }
 ];
@@ -55,33 +59,7 @@ const ThemedExample = () => (
     <ChatBot
       acceptedFileTypes={acceptedFileTypes}
       handleEnd={handleEnd}
-      steps={[
-        {
-          id: '1',
-          message: 'What number I am thinking?',
-          trigger: '2',
-        },
-        {
-          id: '2',
-          user: true,
-          trigger: '4',
-          addOptions: [
-            { value: 1, label: 'Number 1', trigger: '4' },
-            { value: 2, label: 'Number 2', trigger: '3' },
-            { value: 3, label: 'Number 3', trigger: '3' },
-          ],
-        },
-        {
-          id: '3',
-          message: '3 step',
-          trigger: '4',
-        },
-        {
-          id: '4',
-          message: 'Awesome! You are a telepath!',
-          end: true,
-        },
-      ]}
+      steps={steps}
     />
   </ThemeProvider>
 );

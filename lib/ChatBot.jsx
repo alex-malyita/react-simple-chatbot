@@ -331,6 +331,28 @@ class ChatBot extends Component {
         renderedSteps,
         previousSteps,
       });
+    } else if (currentStep.addOptions && data) {
+      const option = currentStep.addOptions.filter(o => o.value === data.value)[0];
+      const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
+      delete currentStep.addOptions;
+
+      // replace choose option for user message
+      currentStep = Object.assign({}, currentStep, option, defaultUserSettings, {
+        user: true,
+        message: option.label,
+        trigger,
+      });
+
+      renderedSteps.pop();
+      previousSteps.pop();
+      renderedSteps.push(currentStep);
+      previousSteps.push(currentStep);
+
+      this.setState({
+        currentStep,
+        renderedSteps,
+        previousSteps,
+      });
     } else if (currentStep.trigger) {
       if (currentStep.replace) {
         renderedSteps.pop();
