@@ -31,19 +31,30 @@ const steps = [
     enableFiles: true,
     addOptions: [
       { value: '1', label: 'Number 1',trigger:'3'},
-      { value: '2', label: 'Number 2',trigger:'4'},
+      { value: '2', label: 'Number 2',trigger:'3'},
       { value: '3', label: 'Number 3',trigger:'3'},
     ],
     trigger: '3'
   },
   {
     id: '3',
-    message: 'Ok',
-    trigger: '1'
+    message: 'test Ok',
+    trigger: '4'
   },
   {
     id: '4',
-    message: 'Awesome',
+    user: true,
+    enableFiles: true,
+    addOptions: [
+      { value: '1', label: 'Number 1',trigger:'5'},
+      { value: '2', label: 'Number 2',trigger:'5'},
+      { value: '3', label: 'Number 3',trigger:'5'},
+    ],
+    trigger: '5'
+  },
+  {
+    id: '5',
+    message: 'Ok',
     end: true
   }
 ];
