@@ -42,12 +42,13 @@ class OptionsStep extends Component {
   }
 
   render() {
-    const { options } = this.props.step;
+    const { options, addOptions } = this.props.step;
+    const mapItems = options || addOptions;
 
     return (
       <OptionsStepContainer className="rsc-os">
         <Options className="rsc-os-options">
-          {_.map(options, this.renderOption)}
+          {_.map(mapItems, this.renderOption)}
         </Options>
       </OptionsStepContainer>
     );
