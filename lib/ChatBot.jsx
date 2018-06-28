@@ -354,6 +354,7 @@ class ChatBot extends Component {
         currentStep,
         renderedSteps,
         previousSteps,
+        disabled: true,
       });
     } else if (currentStep.trigger) {
       if (currentStep.replace) {
@@ -427,9 +428,6 @@ class ChatBot extends Component {
   }
 
   handleEnd() {
-    this.setState({
-      disabled: true,
-    });
     if (this.props.handleEnd) {
       const { previousSteps } = this.state;
 
