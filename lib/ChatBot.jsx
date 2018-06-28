@@ -427,6 +427,9 @@ class ChatBot extends Component {
   }
 
   handleEnd() {
+    this.setState({
+      disabled: true,
+    });
     if (this.props.handleEnd) {
       const { previousSteps } = this.state;
 
@@ -446,10 +449,6 @@ class ChatBot extends Component {
         value: step.value,
         files: step.files,
       }));
-
-      this.setState({
-        disabled: true,
-      });
 
       this.props.handleEnd({ renderedSteps, steps, values });
     }
